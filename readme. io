@@ -1,0 +1,42 @@
+<?php
+
+// Initialize cURL
+$curl = curl_init();
+
+// Define the URL and query parameters
+$baseUrl = "https://api.example.com/endpoint";
+$queryParams = http_build_query(['key1' => 'value1', 'key2' => 'value2']);
+$url = $baseUrl . "?" . $queryParams;
+
+// Set cURL options
+curl_setopt_array($curl, [
+    CURLOPT_URL => $url, // URL to make the request to
+    CURLOPT_RETURNTRANSFER => true, // Return the response as a string
+    CURLOPT_CUSTOMREQUEST => "POST", // HTTP method
+    CURLOPT_HTTPHEADER => [ // Request headers
+        "Content-Type: application/json",
+        "Authorization: Bearer YOUR_ACCESS_TOKEN"
+    ],
+    CURLOPT_POSTFIELDS => json_encode([ // JSON body data
+        "param1" => "value1",
+        "param2" => "value2"
+    ]),
+    CURLOPT_TIMEOUT => 10, // Timeout in seconds
+    CURLOPT_SSL_VERIFYPEER => true, // Enable SSL certificate verification
+]);
+
+// Execute the request
+$response = curl_exec($curl);
+
+// Check for errors
+if (curl_errno($curl)) {
+    echo "cURL Error: " . curl_error($curl);
+} else {
+    // Handle the response
+    $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+    echo "Status Code: " . $statusCode . "\n";
+    echo "Response: " . $response . "\n";
+}
+
+// Close the cURL session
+curl_close($curl);
